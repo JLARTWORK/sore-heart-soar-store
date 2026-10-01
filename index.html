@@ -190,6 +190,8 @@
     .ctrl { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: var(--muted); transition: color 0.2s, background 0.2s; }
     .ctrl:hover { color: var(--text); background: var(--surface-2); }
     .ctrl svg { width: 20px; height: 20px; }
+    .ctrl-next { width: auto; height: 44px; padding: 0 18px; border-radius: 999px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-2); color: var(--text); font-weight: 600; font-size: 14px; }
+    .ctrl-next:hover { border-color: var(--text); }
     .ctrl-play {
       width: 64px; height: 64px; background: var(--ember); color: var(--on-ember);
       box-shadow: 0 12px 32px -10px var(--ember);
@@ -215,9 +217,7 @@
     .track {
       display: grid; grid-template-columns: 36px 1fr auto; align-items: center; gap: 12px;
       padding: 14px 12px; border-bottom: 1px solid var(--line); border-radius: 10px;
-      cursor: pointer; transition: background 0.2s;
     }
-    .track:hover { background: var(--surface); }
     .track .n { font-family: var(--mono); font-size: 12px; color: var(--dim); }
     .track .t { font-weight: 600; }
     .track .d { font-family: var(--mono); font-size: 12px; color: var(--dim); }
@@ -458,11 +458,11 @@
           <h1 id="heroTitle">Sore Heart <em>Soar</em></h1>
           <p class="hero-lede">Late-night drives through neon rain, broken transmissions, and wings made of static. Music, merch and visuals, direct from the studio.</p>
           <div class="hero-cta">
-            <button class="btn btn-primary" type="button" data-play-first><svg><use href="#i-play"/></svg>Play Useless Heroic</button>
+            <button class="btn btn-primary" type="button" data-play-first><svg><use href="#i-play"/></svg>Preview Songs</button>
             <a class="btn btn-ghost" href="store.html">Shop merch <svg><use href="#i-right"/></svg></a>
           </div>
         </div>
-        <button class="now-card" type="button" data-play-first aria-label="Play the latest single, Useless Heroic">
+        <button class="now-card" type="button" data-play-first aria-label="Preview songs">
           <img src="assets/vinyl-cover.jpg" alt="" width="64" height="64">
           <div>
             <small>Latest single</small>
@@ -499,14 +499,13 @@
           </div>
           <div>
             <div class="player-meta">
-              <small id="pState">Ready</small>
+              <small id="pState">Shuffle · 20-second previews</small>
               <div class="player-title" id="pTitle">Useless Heroic</div>
               <div class="player-artist" id="pArtist">Sore Heart Soar · 2026</div>
             </div>
             <div class="controls">
-              <button class="ctrl" id="pPrev" type="button" aria-label="Previous track"><svg><use href="#i-prev"/></svg></button>
               <button class="ctrl ctrl-play" id="pPlay" type="button" aria-label="Play"><svg><use href="#i-play"/></svg></button>
-              <button class="ctrl" id="pNext" type="button" aria-label="Next track"><svg><use href="#i-next"/></svg></button>
+              <button class="ctrl ctrl-next" id="pNext" type="button"><svg><use href="#i-next"/></svg>Next song</button>
               <label class="vol"><svg><use href="#i-vol"/></svg><span class="sr-only">Volume</span><input type="range" id="pVol" min="0" max="1" step="0.01" value="0.85"></label>
             </div>
             <div class="seek-row">
@@ -756,20 +755,23 @@
     /* Music player */
     (function () {
       const TRACKS = window.SHS_TRACKS;
+      const PREVIEW = window.SHS_PREVIEW_SECONDS || 20;
       const playable = TRACKS.map((t, i) => (t.src ? i : -1)).filter((i) => i >= 0);
       const audio = $('audio');
       const player = $('player');
       const list = $('tracklist');
       const seek = $('pSeek');
       const vol = $('pVol');
-      let cur = playable[0];
+      const nextSong = window.SHS_makeShuffle(playable);
+      let cur = nextSong();
       let dragging = false;
+      let previewDone = false;
 
       const fmt = (s) => { if (!isFinite(s)) return '0:00'; s = Math.floor(s); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
       const fill = (el) => el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
 
       list.innerHTML = TRACKS.map((t, i) => `
-        <li class="track${t.src ? '' : ' soon'}" data-i="${i}" ${t.src ? 'tabindex="0" role="button"' : 'aria-disabled="true"'}>
+        <li class="track${t.src ? '' : ' soon'}" data-i="${i}">
           <span class="n"><span class="n-num">${String(i + 1).padStart(2, '0')}</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></span>
           <span class="t">${t.title}</span>
           ${t.src ? `<span class="d" data-dur="${i}">—</span>` : '<span class="pill">Coming soon</span>'}
@@ -779,11 +781,11 @@
       TRACKS.forEach((t, i) => {
         if (!t.src) return;
         const a = new Audio(); a.preload = 'metadata'; a.src = t.src;
-        a.addEventListener('loadedmetadata', () => { const el = list.querySelector(`[data-dur="${i}"]`); if (el) el.textContent = fmt(a.duration); });
+        a.addEventListener('loadedmetadata', () => { const el = list.querySelector(`[data-dur="${i}"]`); if (el) el.textContent = fmt(Math.min(a.duration, PREVIEW)); });
       });
 
       function load(i, autoplay) {
-        cur = i;
+        cur = i; previewDone = false;
         const t = TRACKS[i];
         audio.src = t.src;
         $('pTitle').textContent = t.title; $('mTitle').textContent = t.title;
@@ -792,14 +794,19 @@
         seek.value = 0; fill(seek); $('pCur').textContent = '0:00';
         if (autoplay) audio.play().catch(() => {});
       }
-      function toggle() { if (!audio.src) load(cur); audio.paused ? audio.play().catch(() => {}) : audio.pause(); }
-      function step(d) {
-        const k = playable.indexOf(cur);
-        load(playable[(k + d + playable.length) % playable.length], !audio.paused || d !== 0);
+      function toggle() { if (!audio.src) load(cur); previewDone = false; audio.paused ? audio.play().catch(() => {}) : audio.pause(); }
+      // Next is the only way to change songs; it always starts the new preview.
+      function next() { load(nextSong(), true); }
+      // At the end of a preview the song stops and waits for Next.
+      function endPreview() {
+        previewDone = true;
+        audio.pause(); audio.currentTime = 0;
+        seek.value = 0; fill(seek); $('pCur').textContent = '0:00'; $('mBar').style.width = '0%';
+        setPlayingUi(false);
       }
       function setPlayingUi(on) {
         player.classList.toggle('playing', on);
-        $('pState').textContent = on ? 'Now playing' : (audio.currentTime > 0 ? 'Paused' : 'Ready');
+        $('pState').textContent = on ? 'Previewing · shuffle' : previewDone ? 'Preview over · press next for another song' : (audio.currentTime > 0 ? 'Paused' : 'Shuffle · ' + PREVIEW + '-second previews');
         ['pPlay', 'mPlay'].forEach((id) => {
           $(id).querySelector('use').setAttribute('href', on ? '#i-pause' : '#i-play');
           $(id).setAttribute('aria-label', on ? 'Pause' : 'Play');
@@ -809,33 +816,28 @@
 
       $('pPlay').addEventListener('click', toggle);
       $('mPlay').addEventListener('click', toggle);
-      $('pPrev').addEventListener('click', () => (audio.currentTime > 3 ? (audio.currentTime = 0) : step(-1)));
-      $('pNext').addEventListener('click', () => step(1));
-      $('mNext').addEventListener('click', () => step(1));
+      $('pNext').addEventListener('click', next);
+      $('mNext').addEventListener('click', next);
       document.querySelectorAll('[data-play-first]').forEach((b) => b.addEventListener('click', () => {
-        if (cur !== playable[0] || !audio.src) load(playable[0]);
-        audio.play().catch(() => {});
+        if (audio.paused) { previewDone = false; audio.play().catch(() => {}); }
       }));
-      list.addEventListener('click', (e) => {
-        const li = e.target.closest('.track:not(.soon)'); if (!li) return;
-        const i = +li.dataset.i;
-        i === cur && audio.src ? toggle() : load(i, true);
-      });
-      list.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.target.click(); } });
 
       audio.addEventListener('play', () => setPlayingUi(true));
       audio.addEventListener('pause', () => setPlayingUi(false));
-      audio.addEventListener('ended', () => step(1));
-      audio.addEventListener('loadedmetadata', () => { $('pDur').textContent = fmt(audio.duration); });
+      audio.addEventListener('ended', endPreview);
+      const len = () => Math.min(audio.duration || 0, PREVIEW);
+      audio.addEventListener('loadedmetadata', () => { $('pDur').textContent = fmt(len()); });
+      audio.addEventListener('seeking', () => { if (audio.currentTime > PREVIEW) audio.currentTime = PREVIEW - 0.5; });
       audio.addEventListener('timeupdate', () => {
         if (!audio.duration) return;
-        const p = audio.currentTime / audio.duration;
+        if (audio.currentTime >= PREVIEW) { endPreview(); return; }
+        const p = Math.min(1, audio.currentTime / len());
         if (!dragging) { seek.value = Math.round(p * 1000); fill(seek); }
         $('pCur').textContent = fmt(audio.currentTime);
         $('mBar').style.width = (p * 100) + '%';
       });
-      seek.addEventListener('input', () => { dragging = true; fill(seek); if (audio.duration) $('pCur').textContent = fmt(seek.value / 1000 * audio.duration); });
-      seek.addEventListener('change', () => { if (audio.duration) audio.currentTime = seek.value / 1000 * audio.duration; dragging = false; });
+      seek.addEventListener('input', () => { dragging = true; fill(seek); if (audio.duration) $('pCur').textContent = fmt(seek.value / 1000 * len()); });
+      seek.addEventListener('change', () => { if (audio.duration) audio.currentTime = Math.min(seek.value / 1000 * len(), PREVIEW - 0.5); dragging = false; });
       vol.value = store.get('shs-volume', '0.85');
       audio.volume = +vol.value; fill(vol);
       vol.addEventListener('input', () => { audio.volume = +vol.value; fill(vol); store.set('shs-volume', vol.value); });

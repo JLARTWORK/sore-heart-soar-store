@@ -168,6 +168,8 @@
     .ctrl { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; color: var(--muted); transition: color 0.2s, background 0.2s; }
     .ctrl:hover { color: var(--text); background: var(--surface-2); }
     .ctrl[aria-pressed="true"] { color: var(--ember); }
+    .ctrl-next { width: auto; height: 44px; padding: 0 18px; border-radius: 999px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-2); color: var(--text); font-weight: 600; font-size: 14px; }
+    .ctrl-next:hover { border-color: var(--text); }
     .ctrl-play { width: 60px; height: 60px; background: var(--ember); color: var(--on-ember); box-shadow: 0 12px 32px -10px var(--ember); }
     .ctrl-play:hover { background: var(--ember-2); color: var(--on-ember); }
     .ctrl-play svg.i { width: 22px; height: 22px; }
@@ -178,8 +180,7 @@
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--text); box-shadow: 0 0 0 4px var(--glow); }
     input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border: 0; border-radius: 50%; background: var(--text); }
     .tracks { list-style: none; margin-top: 22px; border-top: 1px solid var(--line); }
-    .tr { display: grid; grid-template-columns: 32px 1fr auto; gap: 12px; align-items: center; padding: 12px 10px; border-bottom: 1px solid var(--line); border-radius: 10px; cursor: pointer; transition: background 0.2s; }
-    .tr:hover { background: var(--surface); }
+    .tr { display: grid; grid-template-columns: 32px 1fr auto; gap: 12px; align-items: center; padding: 12px 10px; border-bottom: 1px solid var(--line); border-radius: 10px; }
     .tr .n, .tr .d { font-family: var(--mono); font-size: 12px; color: var(--dim); }
     .tr .t { font-weight: 600; }
     .tr.active .t, .tr.active .n { color: var(--ember); }
@@ -405,7 +406,7 @@
           <div class="hero-actions">
             <button class="btn btn-primary" type="button" data-add="1"><svg class="i"><use href="#i-bag"/></svg>Add to cart</button>
             <button class="btn btn-ghost" type="button" data-open="1">Details</button>
-            <button class="btn btn-ghost" type="button" id="heroListen"><svg class="i"><use href="#i-play"/></svg>Preview</button>
+            <button class="btn btn-ghost" type="button" id="heroListen"><svg class="i"><use href="#i-play"/></svg>Preview Songs</button>
           </div>
         </div>
         <div class="record" id="record">
@@ -451,16 +452,13 @@
           <div class="listen-art"><img id="npArt" src="assets/vinyl-cover.jpg" alt="Sidereal Vault cover art" width="340" height="340"></div>
           <div>
             <div class="np">
-              <small id="npState">Listen while you shop</small>
+              <small id="npState">Shuffle · 20-second previews</small>
               <div class="np-title" id="npTitle">Desperation</div>
               <div class="np-artist">Sore Heart Soar</div>
             </div>
             <div class="controls">
-              <button class="ctrl" id="shuffleBtn" type="button" aria-label="Shuffle" aria-pressed="false"><svg class="i"><use href="#i-shuffle"/></svg></button>
-              <button class="ctrl" id="prevBtn" type="button" aria-label="Previous track"><svg class="i"><use href="#i-prev"/></svg></button>
               <button class="ctrl ctrl-play" id="playBtn" type="button" aria-label="Play"><svg class="i"><use href="#i-play"/></svg></button>
-              <button class="ctrl" id="nextBtn" type="button" aria-label="Next track"><svg class="i"><use href="#i-next"/></svg></button>
-              <button class="ctrl" id="repeatBtn" type="button" aria-label="Repeat" aria-pressed="false"><svg class="i"><use href="#i-repeat"/></svg></button>
+              <button class="ctrl ctrl-next" id="nextBtn" type="button"><svg class="i"><use href="#i-next"/></svg>Next song</button>
               <label class="vol"><svg class="i"><use href="#i-vol"/></svg><span class="sr-only">Volume</span><input type="range" id="vol" min="0" max="1" step="0.01" value="0.85"></label>
             </div>
             <div class="seek-row"><span id="cur">0:00</span><input type="range" id="seek" min="0" max="1000" value="0" aria-label="Seek"><span id="dur">0:00</span></div>
@@ -924,24 +922,27 @@
 
     /* ── Player ── */
     const TRACKS = window.SHS_TRACKS.filter((t) => t.src);
+    const PREVIEW = window.SHS_PREVIEW_SECONDS || 20;
+    const len = () => Math.min(audio.duration || 0, PREVIEW);
     const audio = $('audio');
-    let cur = 0, dragging = false, shuffle = false, repeat = false;
+    const nextSong = window.SHS_makeShuffle(TRACKS.map((t, i) => i));
+    let cur = 0, dragging = false, previewDone = false;
     const fmt = (s) => { if (!isFinite(s)) return '0:00'; s = Math.floor(s); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
     const fill = (el) => el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
 
     function renderTracks() {
       $('tracks').innerHTML = TRACKS.map((t, i) => `
-        <li class="tr" data-i="${i}" tabindex="0" role="button">
+        <li class="tr" data-i="${i}">
           <span class="n"><span class="num">${String(i + 1).padStart(2, '0')}</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></span>
           <span class="t">${esc(t.title)}</span><span class="d" data-dur="${i}">—</span>
         </li>`).join('');
       TRACKS.forEach((t, i) => {
         const a = new Audio(); a.preload = 'metadata'; a.src = t.src;
-        a.addEventListener('loadedmetadata', () => { const el = document.querySelector(`[data-dur="${i}"]`); if (el) el.textContent = fmt(a.duration); });
+        a.addEventListener('loadedmetadata', () => { const el = document.querySelector(`[data-dur="${i}"]`); if (el) el.textContent = fmt(Math.min(a.duration, PREVIEW)); });
       });
     }
     function loadTrack(i, play) {
-      cur = (i + TRACKS.length) % TRACKS.length;
+      cur = (i + TRACKS.length) % TRACKS.length; previewDone = false;
       audio.src = TRACKS[cur].src;
       $('npTitle').textContent = TRACKS[cur].title; $('miniTitle').textContent = TRACKS[cur].title;
       $('npArt').src = TRACKS[cur].art; $('miniArt').src = TRACKS[cur].art;
@@ -949,15 +950,20 @@
       $('seek').value = 0; fill($('seek')); $('cur').textContent = '0:00';
       if (play) audio.play().catch(() => {});
     }
-    function nextIndex(d) {
-      if (shuffle && TRACKS.length > 1) { let n; do { n = Math.floor(Math.random() * TRACKS.length); } while (n === cur); return n; }
-      return cur + d;
+    // Next is the only way to change songs; it always starts the new preview.
+    function nextTrack() { loadTrack(nextSong(), true); }
+    function togglePlay() { if (!audio.src) loadTrack(cur); previewDone = false; audio.paused ? audio.play().catch(() => {}) : audio.pause(); }
+    // At the end of a preview the song stops and waits for Next.
+    function endPreview() {
+      previewDone = true;
+      audio.pause(); audio.currentTime = 0;
+      $('seek').value = 0; fill($('seek')); $('cur').textContent = '0:00'; $('miniBar').style.width = '0%';
+      playingUi(false);
     }
-    function togglePlay() { if (!audio.src) loadTrack(cur); audio.paused ? audio.play().catch(() => {}) : audio.pause(); }
     function playingUi(on) {
       $('listenBox').classList.toggle('playing', on);
       $('record').classList.toggle('spinning', on); $('record').classList.toggle('out', on);
-      $('npState').textContent = on ? 'Now playing' : (audio.currentTime > 0 ? 'Paused' : 'Listen while you shop');
+      $('npState').textContent = on ? 'Previewing · shuffle' : previewDone ? 'Preview over · press next for another song' : (audio.currentTime > 0 ? 'Paused' : 'Shuffle · ' + PREVIEW + '-second previews');
       ['playBtn', 'miniPlay'].forEach((id) => { $(id).querySelector('use').setAttribute('href', on ? '#i-pause' : '#i-play'); $(id).setAttribute('aria-label', on ? 'Pause' : 'Play'); });
       $('heroListen').querySelector('use').setAttribute('href', on ? '#i-pause' : '#i-play');
       if (on) $('mini').classList.add('show');
@@ -1027,26 +1033,23 @@
       $('playBtn').addEventListener('click', togglePlay);
       $('miniPlay').addEventListener('click', togglePlay);
       $('heroListen').addEventListener('click', togglePlay);
-      $('prevBtn').addEventListener('click', () => (audio.currentTime > 3 ? (audio.currentTime = 0) : loadTrack(nextIndex(-1), !audio.paused)));
-      $('nextBtn').addEventListener('click', () => loadTrack(nextIndex(1), !audio.paused));
-      $('miniNext').addEventListener('click', () => loadTrack(nextIndex(1), true));
-      $('shuffleBtn').addEventListener('click', (e) => { shuffle = !shuffle; e.currentTarget.setAttribute('aria-pressed', String(shuffle)); });
-      $('repeatBtn').addEventListener('click', (e) => { repeat = !repeat; e.currentTarget.setAttribute('aria-pressed', String(repeat)); });
-      $('tracks').addEventListener('click', (e) => { const li = e.target.closest('.tr'); if (!li) return; +li.dataset.i === cur && audio.src ? togglePlay() : loadTrack(+li.dataset.i, true); });
-      $('tracks').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.target.click(); } });
+      $('nextBtn').addEventListener('click', nextTrack);
+      $('miniNext').addEventListener('click', nextTrack);
       audio.addEventListener('play', () => playingUi(true));
       audio.addEventListener('pause', () => playingUi(false));
-      audio.addEventListener('ended', () => { if (repeat) { audio.currentTime = 0; audio.play(); } else loadTrack(nextIndex(1), true); });
-      audio.addEventListener('loadedmetadata', () => { $('dur').textContent = fmt(audio.duration); });
+      audio.addEventListener('ended', endPreview);
+      audio.addEventListener('loadedmetadata', () => { $('dur').textContent = fmt(len()); });
+      audio.addEventListener('seeking', () => { if (audio.currentTime > PREVIEW) audio.currentTime = PREVIEW - 0.5; });
       audio.addEventListener('timeupdate', () => {
         if (!audio.duration) return;
-        const p = audio.currentTime / audio.duration;
+        if (audio.currentTime >= PREVIEW) { endPreview(); return; }
+        const p = Math.min(1, audio.currentTime / len());
         if (!dragging) { $('seek').value = Math.round(p * 1000); fill($('seek')); }
         $('cur').textContent = fmt(audio.currentTime);
         $('miniBar').style.width = (p * 100) + '%';
       });
-      $('seek').addEventListener('input', (e) => { dragging = true; fill(e.target); if (audio.duration) $('cur').textContent = fmt(e.target.value / 1000 * audio.duration); });
-      $('seek').addEventListener('change', (e) => { if (audio.duration) audio.currentTime = e.target.value / 1000 * audio.duration; dragging = false; });
+      $('seek').addEventListener('input', (e) => { dragging = true; fill(e.target); if (audio.duration) $('cur').textContent = fmt(e.target.value / 1000 * len()); });
+      $('seek').addEventListener('change', (e) => { if (audio.duration) audio.currentTime = Math.min(e.target.value / 1000 * len(), PREVIEW - 0.5); dragging = false; });
       const vol = $('vol');
       vol.value = ls.get('shs-volume', '0.85'); audio.volume = +vol.value; fill(vol);
       vol.addEventListener('input', () => { audio.volume = +vol.value; fill(vol); ls.set('shs-volume', vol.value); });
@@ -1054,7 +1057,7 @@
 
     function init() {
       applyTheme(document.documentElement.getAttribute('data-theme'));
-      renderChips(); renderGrid(); renderCart(); renderTracks(); loadTrack(Math.max(0, TRACKS.findIndex((t) => t.title === 'Desperation')));
+      renderChips(); renderGrid(); renderCart(); renderTracks(); loadTrack(nextSong());
       setupEvents();
       fill($('seek'));
       const m = location.hash.match(/^#product-(\d+)$/);
