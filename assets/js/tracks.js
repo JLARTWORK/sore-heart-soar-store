@@ -18,6 +18,28 @@ window.SHS_makeShuffle = function (indexes) {
   };
 };
 
+// Autoplay: start the player when the page opens. Browsers block sound until the
+// visitor interacts, so if that happens the music starts on their first click or
+// key press instead (unless it was on a player control, or they're typing).
+// If the visitor paused, neither page auto-starts again for the rest of the session.
+window.SHS_setUserPaused = function (paused) {
+  try { sessionStorage.setItem('shs-paused', paused ? '1' : '0'); } catch (e) { /* storage off */ }
+};
+window.SHS_autoplay = function (audio, controls) {
+  const pausedByUser = () => { try { return sessionStorage.getItem('shs-paused') === '1'; } catch (e) { return false; } };
+  if (pausedByUser()) return;
+  const events = ['pointerdown', 'keydown', 'touchend'];
+  const off = () => events.forEach((t) => document.removeEventListener(t, go, true));
+  function go(e) {
+    const t = e.target.closest ? e.target : document.body;
+    if (t.closest('input, textarea, select')) return;
+    off();
+    if (t.closest(controls)) return;
+    if (audio.paused && !pausedByUser()) audio.play().catch(() => {});
+  }
+  audio.play().catch(() => events.forEach((t) => document.addEventListener(t, go, true)));
+};
+
 window.SHS_TRACKS = [
   { title: 'Useless Heroic', src: 'assets/music/useless-heroic.mp3', art: 'assets/vinyl-cover.jpg' },
   { title: 'Desperation', src: 'assets/music/desperation.mp3', art: 'assets/vinyl-cover.jpg' },

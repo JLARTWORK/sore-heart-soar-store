@@ -765,7 +765,6 @@
       const nextSong = window.SHS_makeShuffle(playable);
       let cur = nextSong();
       let dragging = false;
-      let previewDone = false;
 
       const fmt = (s) => { if (!isFinite(s)) return '0:00'; s = Math.floor(s); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
       const fill = (el) => el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
@@ -785,7 +784,7 @@
       });
 
       function load(i, autoplay) {
-        cur = i; previewDone = false;
+        cur = i;
         const t = TRACKS[i];
         audio.src = t.src;
         $('pTitle').textContent = t.title; $('mTitle').textContent = t.title;
@@ -794,19 +793,19 @@
         seek.value = 0; fill(seek); $('pCur').textContent = '0:00';
         if (autoplay) audio.play().catch(() => {});
       }
-      function toggle() { if (!audio.src) load(cur); previewDone = false; audio.paused ? audio.play().catch(() => {}) : audio.pause(); }
-      // Next is the only way to change songs; it always starts the new preview.
-      function next() { load(nextSong(), true); }
-      // At the end of a preview the song stops and waits for Next.
-      function endPreview() {
-        previewDone = true;
-        audio.pause(); audio.currentTime = 0;
-        seek.value = 0; fill(seek); $('pCur').textContent = '0:00'; $('mBar').style.width = '0%';
-        setPlayingUi(false);
+      function toggle() {
+        if (!audio.src) load(cur);
+        const play = audio.paused;
+        window.SHS_setUserPaused(!play);
+        play ? audio.play().catch(() => {}) : audio.pause();
       }
+      // Next is the only manual way to change songs; it always starts the new preview.
+      function next() { window.SHS_setUserPaused(false); load(nextSong(), true); }
+      // When a preview ends, the next shuffled song starts on its own.
+      function endPreview() { load(nextSong(), true); }
       function setPlayingUi(on) {
         player.classList.toggle('playing', on);
-        $('pState').textContent = on ? 'Previewing · shuffle' : previewDone ? 'Preview over · press next for another song' : (audio.currentTime > 0 ? 'Paused' : 'Shuffle · ' + PREVIEW + '-second previews');
+        $('pState').textContent = on ? 'Previewing · shuffle' : (audio.currentTime > 0 ? 'Paused' : 'Shuffle · ' + PREVIEW + '-second previews');
         ['pPlay', 'mPlay'].forEach((id) => {
           $(id).querySelector('use').setAttribute('href', on ? '#i-pause' : '#i-play');
           $(id).setAttribute('aria-label', on ? 'Pause' : 'Play');
@@ -819,7 +818,7 @@
       $('pNext').addEventListener('click', next);
       $('mNext').addEventListener('click', next);
       document.querySelectorAll('[data-play-first]').forEach((b) => b.addEventListener('click', () => {
-        if (audio.paused) { previewDone = false; audio.play().catch(() => {}); }
+        if (audio.paused) { window.SHS_setUserPaused(false); audio.play().catch(() => {}); }
       }));
 
       audio.addEventListener('play', () => setPlayingUi(true));
@@ -849,6 +848,7 @@
       });
 
       load(cur, false);
+      window.SHS_autoplay(audio, '#pPlay, #mPlay, #pNext, #mNext, [data-play-first]');
       fill(seek);
     })();
 

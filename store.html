@@ -926,7 +926,7 @@
     const len = () => Math.min(audio.duration || 0, PREVIEW);
     const audio = $('audio');
     const nextSong = window.SHS_makeShuffle(TRACKS.map((t, i) => i));
-    let cur = 0, dragging = false, previewDone = false;
+    let cur = 0, dragging = false;
     const fmt = (s) => { if (!isFinite(s)) return '0:00'; s = Math.floor(s); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
     const fill = (el) => el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
 
@@ -942,7 +942,7 @@
       });
     }
     function loadTrack(i, play) {
-      cur = (i + TRACKS.length) % TRACKS.length; previewDone = false;
+      cur = (i + TRACKS.length) % TRACKS.length;
       audio.src = TRACKS[cur].src;
       $('npTitle').textContent = TRACKS[cur].title; $('miniTitle').textContent = TRACKS[cur].title;
       $('npArt').src = TRACKS[cur].art; $('miniArt').src = TRACKS[cur].art;
@@ -950,20 +950,20 @@
       $('seek').value = 0; fill($('seek')); $('cur').textContent = '0:00';
       if (play) audio.play().catch(() => {});
     }
-    // Next is the only way to change songs; it always starts the new preview.
-    function nextTrack() { loadTrack(nextSong(), true); }
-    function togglePlay() { if (!audio.src) loadTrack(cur); previewDone = false; audio.paused ? audio.play().catch(() => {}) : audio.pause(); }
-    // At the end of a preview the song stops and waits for Next.
-    function endPreview() {
-      previewDone = true;
-      audio.pause(); audio.currentTime = 0;
-      $('seek').value = 0; fill($('seek')); $('cur').textContent = '0:00'; $('miniBar').style.width = '0%';
-      playingUi(false);
+    // Next is the only manual way to change songs; it always starts the new preview.
+    function nextTrack() { window.SHS_setUserPaused(false); loadTrack(nextSong(), true); }
+    function togglePlay() {
+      if (!audio.src) loadTrack(cur);
+      const play = audio.paused;
+      window.SHS_setUserPaused(!play);
+      play ? audio.play().catch(() => {}) : audio.pause();
     }
+    // When a preview ends, the next shuffled song starts on its own.
+    function endPreview() { loadTrack(nextSong(), true); }
     function playingUi(on) {
       $('listenBox').classList.toggle('playing', on);
       $('record').classList.toggle('spinning', on); $('record').classList.toggle('out', on);
-      $('npState').textContent = on ? 'Previewing · shuffle' : previewDone ? 'Preview over · press next for another song' : (audio.currentTime > 0 ? 'Paused' : 'Shuffle · ' + PREVIEW + '-second previews');
+      $('npState').textContent = on ? 'Previewing · shuffle' : (audio.currentTime > 0 ? 'Paused' : 'Shuffle · ' + PREVIEW + '-second previews');
       ['playBtn', 'miniPlay'].forEach((id) => { $(id).querySelector('use').setAttribute('href', on ? '#i-pause' : '#i-play'); $(id).setAttribute('aria-label', on ? 'Pause' : 'Play'); });
       $('heroListen').querySelector('use').setAttribute('href', on ? '#i-pause' : '#i-play');
       if (on) $('mini').classList.add('show');
@@ -1058,6 +1058,7 @@
     function init() {
       applyTheme(document.documentElement.getAttribute('data-theme'));
       renderChips(); renderGrid(); renderCart(); renderTracks(); loadTrack(nextSong());
+      window.SHS_autoplay(audio, '#playBtn, #miniPlay, #nextBtn, #miniNext, #heroListen');
       setupEvents();
       fill($('seek'));
       const m = location.hash.match(/^#product-(\d+)$/);
