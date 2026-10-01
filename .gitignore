@@ -1,2 +1,16 @@
 .DS_Store
 **/.DS_Store
+
+# Local Netlify folder
+.netlify
+
+# Tool / MCP junk
+.mcp-*.json
+_mcp_*.json
+*.mcp-args*.json
+.mcp-call-args.json
+.mcp-push-*.json
+.mcp-upload-*.json
+.mcp-restore-*.json
+.mcp-final-*.json
+.mcp-args-for-tool.json

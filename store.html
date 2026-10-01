@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Store · SHS Official Site — Sore Heart Soar</title>
+  <meta name="description" content="Official Sore Heart Soar merch: vinyl, apparel and limited accessories. Free shipping on orders $50+.">
+  <meta name="theme-color" content="#07070a" id="metaThemeColor">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <script>
+    (function () {
+      var t = 'dark';
+      try { t = localStorage.getItem('shs-theme') || localStorage.getItem('shs-store-theme') || t; } catch (e) {}
+      // 'classic' was the old light MySpace theme, 'neon' the old dark one
+      document.documentElement.setAttribute('data-theme', (t === 'light' || t === 'classic') ? 'light' : 'dark');
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/shs.css">
+  <style>
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 140px; }
+    body { font-family: var(--sans); font-size: 16px; line-height: 1.6; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body.locked { overflow: hidden; }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; color: inherit; }
+    button { background: none; border: 0; cursor: pointer; }
+    :focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; border-radius: 6px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .wrap { width: min(100% - 40px, var(--max)); margin-inline: auto; }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ember); display: inline-flex; align-items: center; gap: 10px; }
+    .eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; }
+    svg.i { width: 18px; height: 18px; flex: none; }
+
+    /* ── Announcement ── */
+    .announce { background: var(--ember); color: var(--on-ember); font-size: 13px; font-weight: 600; text-align: center; padding: 8px 16px; }
+    .announce b { font-weight: 800; }
+
+    /* ── Header ── */
+    .header { position: sticky; top: 0; z-index: 40; background: var(--header-bg); backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4); border-bottom: 1px solid var(--line); }
+    .header-row { display: flex; align-items: center; gap: 20px; height: 68px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 0 10px var(--glow)); }
+    .brand b { font-family: var(--display); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; font-size: 15px; white-space: nowrap; }
+    .brand small { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); display: block; line-height: 1; margin-top: 3px; }
+    .header-nav { display: flex; gap: 2px; margin-left: 12px; }
+    .header-nav a { font-size: 14px; font-weight: 500; color: var(--muted); padding: 8px 14px; border-radius: 999px; transition: color 0.2s, background 0.2s; }
+    .header-nav a:hover { color: var(--text); background: var(--surface-2); }
+    .search { position: relative; margin-left: auto; width: min(320px, 32vw); }
+    .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--dim); pointer-events: none; }
+    .search input { width: 100%; height: 42px; padding: 0 44px 0 42px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; }
+    .search input::placeholder { color: var(--dim); }
+    .search input:focus { outline: none; border-color: var(--ember); box-shadow: 0 0 0 4px var(--glow); background: var(--bg); }
+    .search kbd { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 11px; color: var(--dim); border: 1px solid var(--line-2); border-radius: 6px; padding: 1px 7px; }
+    .search input:focus + kbd, .search input:not(:placeholder-shown) + kbd { display: none; }
+    .icon-btn { position: relative; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); transition: color 0.2s, border-color 0.2s, background 0.2s; flex: none; }
+    .icon-btn:hover { color: var(--text); border-color: var(--line-2); background: var(--surface); }
+    .cart-btn { width: auto; padding: 0 16px 0 14px; gap: 8px; display: flex; align-items: center; font-weight: 600; font-size: 14px; color: var(--text); }
+    .badge { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--ember); color: var(--on-ember); font-size: 11px; font-weight: 800; display: grid; place-items: center; transition: transform 0.2s var(--ease); }
+    .badge.is-zero { background: var(--surface-2); color: var(--dim); }
+    .badge.pop { transform: scale(1.35); }
+
+    /* ── Buttons ── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 50px; padding: 0 26px; border-radius: 999px; font-weight: 600; font-size: 15px; white-space: nowrap; transition: transform 0.2s var(--ease), box-shadow 0.2s, background 0.2s, border-color 0.2s, color 0.2s; }
+    .btn-primary { background: var(--ember); color: var(--on-ember); box-shadow: 0 10px 30px -10px var(--glow); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 40px -12px var(--ember); }
+    .btn-ghost { border: 1px solid var(--line-2); background: var(--surface); }
+    .btn-ghost:hover { border-color: var(--text); transform: translateY(-2px); }
+    .btn-block { width: 100%; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ── Hero ── */
+    .hero { position: relative; overflow: hidden; isolation: isolate; padding: clamp(48px, 7vw, 96px) 0; border-bottom: 1px solid var(--line); }
+    .hero::before {
+      content: ''; position: absolute; inset: -20%; z-index: -2; opacity: 0.35; filter: blur(90px) saturate(1.3);
+      background: url('assets/vinyl-cover.jpg') center / cover;
+    }
+    .hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, var(--bg) 25%, transparent 75%), linear-gradient(0deg, var(--bg), transparent 40%); }
+    .hero-grid > * { min-width: 0; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+    .hero h1 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(2.6rem, 5vw, 4.7rem); line-height: 0.9; letter-spacing: -0.02em; margin: 18px 0 18px; }
+    .hero h1 span { display: block; background: linear-gradient(92deg, var(--ember), var(--ember-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p { color: var(--muted); max-width: 480px; font-size: 17px; }
+    .specs { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 26px; }
+    .specs span { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); }
+    .price-row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 26px; }
+    .price-row .now { font-family: var(--display); font-weight: 800; font-size: 2.2rem; }
+    .was { color: var(--dim); text-decoration: line-through; }
+    .save { white-space: nowrap; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 6px; background: var(--glow); color: var(--ember); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .record { position: relative; width: min(100%, 520px); aspect-ratio: 1; margin-left: auto; }
+    .record .disc {
+      position: absolute; top: 4%; right: -2%; width: 92%; aspect-ratio: 1; border-radius: 50%;
+      background:
+        radial-gradient(circle, var(--ember) 0 9%, #0b0b0b 9.5% 10.5%, transparent 11%),
+        repeating-radial-gradient(circle, #121212 0 2px, #1b1b1b 2px 3px);
+      box-shadow: 0 30px 60px -20px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05);
+      transition: transform 0.9s var(--ease);
+      animation: spin 6s linear infinite; animation-play-state: paused;
+    }
+    .record .disc::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 30deg, transparent 0 20%, rgba(255,255,255,0.08) 25%, transparent 30% 70%, rgba(255,255,255,0.06) 75%, transparent 80%); }
+    .record .disc { transform: translateX(12%); }
+    .record:hover .disc, .record.out .disc { transform: translateX(26%); }
+    .record.spinning .disc { animation-play-state: running; }
+    @keyframes spin { to { rotate: 360deg; } }
+    .record img { position: relative; width: 92%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 8px; box-shadow: 0 40px 80px -30px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06); cursor: pointer; }
+
+    /* ── Perks ── */
+    .perks { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .perk { display: flex; gap: 14px; align-items: center; padding: 26px 20px; }
+    .perk + .perk { border-left: 1px solid var(--line); }
+    .perk .ic { width: 44px; height: 44px; flex: none; border-radius: 12px; display: grid; place-items: center; background: var(--surface-2); color: var(--ember); }
+    .perk strong { display: block; font-size: 15px; }
+    .perk span { font-size: 13px; color: var(--dim); }
+
+    /* ── Shop ── */
+    section.block { padding: clamp(56px, 8vw, 104px) 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 28px; }
+    .section-head h2 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(2rem, 5vw, 3.6rem); line-height: 0.95; margin-top: 12px; }
+    .toolbar { position: sticky; top: 68px; z-index: 30; display: flex; align-items: center; gap: 12px; padding: 12px 0; margin-bottom: 24px; background: var(--bg); border-bottom: 1px solid var(--line); }
+    .chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; flex: 1; }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip { height: 38px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line-2); font-size: 14px; font-weight: 500; color: var(--muted); white-space: nowrap; transition: all 0.2s; }
+    .chip:hover { color: var(--text); border-color: var(--text); }
+    .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .chip em { font-style: normal; font-family: var(--mono); font-size: 11px; opacity: 0.6; margin-left: 4px; }
+    .sort { height: 38px; padding: 0 34px 0 14px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center; -webkit-appearance: none; appearance: none; font-size: 14px; cursor: pointer; }
+    .result-note { font-size: 14px; color: var(--dim); margin: -8px 0 20px; min-height: 1em; }
+    .result-note button { color: var(--ember); font-weight: 600; margin-left: 6px; }
+
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px 20px; }
+    .card { position: relative; display: flex; flex-direction: column; cursor: pointer; }
+    .card-img { position: relative; aspect-ratio: 1; border-radius: var(--radius); overflow: hidden; background: var(--bg-2); }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease); }
+    .card:hover .card-img img { transform: scale(1.06); }
+    .tag { position: absolute; top: 12px; left: 12px; z-index: 1; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: rgba(7,7,10,0.72); color: #fff; backdrop-filter: blur(8px); }
+    .tag.hot { background: var(--ember); color: #160700; }
+    .tag.limited { background: linear-gradient(92deg, #ffb04a, #ff6a2b); color: #160700; }
+    .tag.new { background: var(--volt); color: #fff; }
+    .quick {
+      position: absolute; right: 12px; bottom: 12px; z-index: 1; height: 40px; padding: 0 16px; border-radius: 999px;
+      display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600;
+      background: rgba(255,255,255,0.94); color: #111; box-shadow: 0 10px 24px -8px rgba(0,0,0,0.5);
+      opacity: 0; transform: translateY(8px); transition: opacity 0.25s, transform 0.25s var(--ease), background 0.2s;
+    }
+    .quick:hover { background: var(--ember); color: #160700; }
+    .card:hover .quick, .card:focus-within .quick { opacity: 1; transform: none; }
+    @media (hover: none) { .quick { opacity: 1; transform: none; padding: 0; width: 40px; justify-content: center; } .quick span { display: none; } }
+    .card-body { display: flex; justify-content: space-between; gap: 12px; padding: 14px 4px 0; }
+    .card-name { font-weight: 600; line-height: 1.35; }
+    .card-cat { font-size: 13px; color: var(--dim); }
+    .card-price { text-align: right; white-space: nowrap; }
+    .card-price b { font-family: var(--mono); font-weight: 500; font-size: 15px; }
+    .card-price s { display: block; font-size: 12px; color: var(--dim); }
+    .empty { grid-column: 1 / -1; text-align: center; padding: 64px 20px; border: 1px dashed var(--line-2); border-radius: var(--radius); color: var(--dim); }
+
+    /* ── Listen ── */
+    .listen { display: grid; grid-template-columns: 340px 1fr; gap: clamp(28px, 5vw, 64px); align-items: center; padding: clamp(24px, 4vw, 40px); border-radius: 28px; background: var(--bg-2); border: 1px solid var(--line); position: relative; overflow: hidden; isolation: isolate; }
+    .listen::before { content: ''; position: absolute; width: 60%; aspect-ratio: 1; left: -15%; top: -40%; z-index: -1; filter: blur(80px); background: radial-gradient(circle, var(--glow), transparent 65%); }
+    .listen-art { aspect-ratio: 1; border-radius: var(--radius); overflow: hidden; box-shadow: 0 30px 60px -30px rgba(0,0,0,0.8); }
+    .listen-art img { width: 100%; height: 100%; object-fit: cover; }
+    .np small { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ember); }
+    .np-title { font-family: var(--display); font-weight: 800; font-size: clamp(1.6rem, 3.4vw, 2.6rem); line-height: 1.05; margin: 6px 0 2px; }
+    .np-artist { color: var(--muted); }
+    .controls { display: flex; align-items: center; gap: 10px; margin: 22px 0 16px; }
+    .ctrl { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; color: var(--muted); transition: color 0.2s, background 0.2s; }
+    .ctrl:hover { color: var(--text); background: var(--surface-2); }
+    .ctrl[aria-pressed="true"] { color: var(--ember); }
+    .ctrl-play { width: 60px; height: 60px; background: var(--ember); color: var(--on-ember); box-shadow: 0 12px 32px -10px var(--ember); }
+    .ctrl-play:hover { background: var(--ember-2); color: var(--on-ember); }
+    .ctrl-play svg.i { width: 22px; height: 22px; }
+    .vol { margin-left: auto; display: flex; align-items: center; gap: 8px; color: var(--muted); }
+    .vol input { width: 90px; flex: none; }
+    .seek-row { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+    input[type="range"] { -webkit-appearance: none; appearance: none; flex: 1; height: 4px; border-radius: 4px; cursor: pointer; background: linear-gradient(90deg, var(--ember) var(--p, 0%), var(--line-2) var(--p, 0%)); }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--text); box-shadow: 0 0 0 4px var(--glow); }
+    input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border: 0; border-radius: 50%; background: var(--text); }
+    .tracks { list-style: none; margin-top: 22px; border-top: 1px solid var(--line); }
+    .tr { display: grid; grid-template-columns: 32px 1fr auto; gap: 12px; align-items: center; padding: 12px 10px; border-bottom: 1px solid var(--line); border-radius: 10px; cursor: pointer; transition: background 0.2s; }
+    .tr:hover { background: var(--surface); }
+    .tr .n, .tr .d { font-family: var(--mono); font-size: 12px; color: var(--dim); }
+    .tr .t { font-weight: 600; }
+    .tr.active .t, .tr.active .n { color: var(--ember); }
+    .eq { display: none; gap: 2px; align-items: end; height: 14px; }
+    .eq i { width: 3px; background: var(--ember); border-radius: 1px; animation: eq 0.9s ease-in-out infinite; }
+    .eq i:nth-child(2) { animation-delay: -0.3s; } .eq i:nth-child(3) { animation-delay: -0.6s; }
+    @keyframes eq { 0%,100% { height: 3px; } 50% { height: 14px; } }
+    .tr.active .num { display: none; }
+    .tr.active .eq { display: flex; }
+    .listen:not(.playing) .eq i { animation-play-state: paused; }
+
+    /* ── FAQ ── */
+    .faq { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(28px, 5vw, 64px); }
+    .faq p.lead { color: var(--muted); margin-top: 16px; max-width: 360px; }
+    .faq p.lead a { color: var(--ember); }
+    details { border-bottom: 1px solid var(--line); }
+    details:first-child { border-top: 1px solid var(--line); }
+    summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 4px; cursor: pointer; font-weight: 600; font-size: 17px; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: '+'; font-family: var(--mono); font-size: 20px; color: var(--dim); transition: transform 0.25s var(--ease); }
+    details[open] summary::after { transform: rotate(45deg); color: var(--ember); }
+    details p { color: var(--muted); padding: 0 4px 22px; max-width: 640px; }
+
+    /* ── Footer ── */
+    .site-footer { border-top: 1px solid var(--line); padding: 56px 0 28px; }
+    .footer-top { display: flex; justify-content: space-between; align-items: end; gap: 28px; flex-wrap: wrap; }
+    .footer-word { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(2rem, 6vw, 4.4rem); line-height: 0.9; color: transparent; -webkit-text-stroke: 1px var(--line-2); }
+    .footer-nav { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+    .footer-nav a, .footer-nav button { color: var(--muted); font-size: 14px; }
+    .footer-nav a:hover, .footer-nav button:hover { color: var(--text); }
+    .footer-bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 36px; font-size: 13px; color: var(--dim); }
+    .site-footer + .ss-brand { margin: 0 auto 32px; width: min(100% - 40px, var(--max)); }
+
+    /* ── Overlays ── */
+    .scrim { position: fixed; inset: 0; z-index: 70; background: var(--shade); backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .scrim.open { opacity: 1; pointer-events: auto; }
+
+    .drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 80; width: min(100%, 440px); display: flex; flex-direction: column; background: var(--bg); border-left: 1px solid var(--line); transform: translateX(100%); transition: transform 0.4s var(--ease); visibility: hidden; }
+    .drawer.open { transform: none; visibility: visible; transition: transform 0.4s var(--ease), visibility 0s; }
+    .drawer:not(.open) { transition: transform 0.4s var(--ease), visibility 0s 0.4s; }
+    .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--line); }
+    .drawer-head h2 { font-family: var(--display); font-weight: 800; font-size: 20px; text-transform: uppercase; }
+    .ship { padding: 16px 24px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+    .ship b { color: var(--text); }
+    .ship .track-bar { height: 6px; border-radius: 6px; background: var(--surface-2); margin-top: 10px; overflow: hidden; }
+    .ship .track-bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--ember), var(--ember-2)); transition: width 0.5s var(--ease); }
+    .ship.done .track-bar i { background: var(--ok); }
+    .lines { flex: 1; overflow-y: auto; padding: 8px 24px; }
+    .line { display: grid; grid-template-columns: 76px 1fr auto; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .line img { width: 76px; height: 76px; border-radius: 10px; object-fit: cover; }
+    .line-name { font-weight: 600; line-height: 1.3; }
+    .line-var { font-size: 13px; color: var(--dim); }
+    .line-bottom { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+    .stepper { display: inline-flex; align-items: center; border: 1px solid var(--line-2); border-radius: 999px; height: 34px; }
+    .stepper button { width: 32px; height: 32px; font-size: 16px; color: var(--muted); border-radius: 50%; }
+    .stepper button:hover { color: var(--text); }
+    .stepper span { min-width: 22px; text-align: center; font-family: var(--mono); font-size: 13px; }
+    .line-price { font-family: var(--mono); font-size: 14px; text-align: right; }
+    .line-rm { font-size: 12px; color: var(--dim); margin-top: 6px; }
+    .line-rm:hover { color: var(--ember); }
+    .cart-empty { display: grid; place-items: center; text-align: center; gap: 12px; padding: 64px 20px; color: var(--dim); }
+    .cart-empty svg { width: 44px; height: 44px; opacity: 0.6; }
+    .totals { padding: 20px 24px 24px; border-top: 1px solid var(--line); display: grid; gap: 8px; }
+    .totals .row { display: flex; justify-content: space-between; color: var(--muted); font-size: 14px; }
+    .totals .row.total { color: var(--text); font-weight: 700; font-size: 18px; padding-top: 8px; margin-top: 4px; border-top: 1px solid var(--line); }
+    .totals .note { font-size: 12px; color: var(--dim); text-align: center; margin-top: 4px; }
+
+    .modal { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 20px; pointer-events: none; }
+    .modal-box { position: relative; width: min(100%, 980px); max-height: calc(100vh - 40px); overflow: auto; display: grid; grid-template-columns: 1fr 1fr; border-radius: 24px; background: var(--bg); border: 1px solid var(--line-2); box-shadow: 0 40px 100px -30px rgba(0,0,0,0.8); opacity: 0; transform: translateY(16px) scale(0.98); transition: opacity 0.3s, transform 0.35s var(--ease); }
+    .modal.open { pointer-events: auto; }
+    .modal.open .modal-box { opacity: 1; transform: none; }
+    .modal-img { background: var(--bg-2); }
+    .modal-img img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 1; }
+    .modal-body { padding: clamp(24px, 4vw, 44px); display: flex; flex-direction: column; }
+    .modal-close { position: absolute; top: 14px; right: 14px; z-index: 2; background: var(--bg); }
+    .modal-cat { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ember); }
+    .modal-title { font-family: var(--display); font-weight: 800; font-size: clamp(1.6rem, 3vw, 2.3rem); line-height: 1.05; margin: 10px 0 14px; }
+    .modal-price { display: flex; align-items: baseline; gap: 10px; margin-bottom: 18px; }
+    .modal-price b { font-family: var(--display); font-size: 1.8rem; font-weight: 800; }
+    .modal-desc { color: var(--muted); margin-bottom: 24px; }
+    .opt-label { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 10px; }
+    .sizes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .size { min-width: 52px; height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line-2); font-weight: 600; font-size: 14px; transition: all 0.15s; }
+    .size:hover { border-color: var(--text); }
+    .size[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .buy-row { display: flex; gap: 12px; margin-top: auto; }
+    .buy-row .stepper { height: 50px; }
+    .buy-row .stepper button { width: 44px; height: 44px; }
+    .buy-row .btn { flex: 1; }
+    .modal-meta { display: grid; gap: 6px; margin-top: 20px; font-size: 13px; color: var(--dim); }
+    .modal-meta span { display: flex; gap: 8px; align-items: center; }
+    .modal-meta svg { width: 16px; height: 16px; color: var(--ok); }
+
+    .toasts { position: fixed; z-index: 100; left: 50%; bottom: 24px; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; pointer-events: none; }
+    .toast { display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 18px; border-radius: 999px; background: var(--text); color: var(--bg); font-size: 14px; font-weight: 500; box-shadow: 0 16px 40px -12px rgba(0,0,0,0.5); pointer-events: auto; animation: toastIn 0.35s var(--ease); }
+    .toast button { font-weight: 700; color: var(--ember); padding: 6px 12px; border-radius: 999px; }
+    .toast.out { opacity: 0; transform: translateY(8px); transition: all 0.3s; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(12px); } }
+
+    .mini { position: fixed; left: 16px; bottom: 16px; z-index: 60; width: min(100% - 32px, 360px); display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 8px; border-radius: 999px; background: var(--header-bg); border: 1px solid var(--line-2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 20px 50px -20px rgba(0,0,0,0.6); transform: translateY(160%); transition: transform 0.4s var(--ease); overflow: hidden; }
+    .mini.show { transform: none; }
+    .mini img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+    .mini .mt { flex: 1; min-width: 0; }
+    .mini strong { display: block; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini small { font-size: 12px; color: var(--dim); }
+    .mini .ctrl-play { width: 42px; height: 42px; }
+    .mini .ctrl-play svg.i { width: 16px; height: 16px; }
+    .mini .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; }
+    .mini .bar i { display: block; height: 100%; width: 0; background: var(--ember); }
+
+    /* ── Responsive ── */
+    @media (max-width: 1080px) { .grid { grid-template-columns: repeat(3, 1fr); } .header-nav { display: none; } }
+    @media (max-width: 860px) {
+      .hero-grid, .listen, .faq { grid-template-columns: 1fr; }
+      .hero::after { background: linear-gradient(0deg, var(--bg) 10%, transparent 80%); }
+      .record { margin: 0 auto; max-width: 420px; order: -1; }
+      .perks { grid-template-columns: repeat(2, 1fr); }
+      .perk:nth-child(3) { border-left: 0; }
+      .perk:nth-child(n+3) { border-top: 1px solid var(--line); }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 24px 14px; }
+      .listen-art { max-width: 300px; }
+      .modal-box { grid-template-columns: 1fr; }
+      .modal-img img { aspect-ratio: 4/3; }
+    }
+    @media (max-width: 640px) {
+      .header-row { gap: 10px; height: 60px; }
+      .brand small { display: none; }
+      .brand b { font-size: 13px; }
+      .search { position: absolute; left: 20px; right: 20px; top: 60px; width: auto; display: none; padding-bottom: 12px; }
+      .header.searching .search { display: block; }
+      .header.searching { padding-bottom: 54px; }
+      .search-toggle { display: grid !important; margin-left: auto; }
+      .cart-btn span.lbl { display: none; }
+      .toolbar { top: 60px; }
+      .vol { display: none; }
+      .perk { padding: 18px 12px; gap: 10px; }
+      .perk .ic { width: 36px; height: 36px; }
+      .section-head h2 { font-size: 9vw; }
+      .modal { padding: 0; align-items: end; }
+      .modal-box { border-radius: 24px 24px 0 0; max-height: 92vh; }
+      .brand div { display: none; }
+      .cart-btn { padding: 0 12px; }
+      .hero h1 { font-size: 10.5vw; }
+      .sort { max-width: 132px; flex: none; }
+      .card-body { flex-direction: column; gap: 2px; }
+      .card-price { text-align: left; display: flex; gap: 8px; align-items: baseline; }
+      .card-price s { display: inline; }
+      .perk span { display: none; }
+      .perk strong { font-size: 14px; line-height: 1.3; }
+      .hero-actions .btn { flex: 1; padding: 0 18px; }
+    }
+    .search-toggle { display: none !important; }
+    @media (max-width: 640px) { .search-toggle { display: grid !important; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      html { scroll-behavior: auto; }
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M7 4.5v15a1 1 0 0 0 1.52.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 7 4.5z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path fill="currentColor" d="M6 5h2v14H6zm3.5 7L19 5v14z"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path fill="currentColor" d="M16 5h2v14h-2zM5 5l9.5 7L5 19z"/></symbol>
+    <symbol id="i-shuffle" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/></symbol>
+    <symbol id="i-vol" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></g></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 7h12l1 13H5zM9 7a3 3 0 0 1 6 0"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M2 6h12v10H2zM14 10h4l4 4v2h-8zM6 19a2 2 0 1 0 0-.01M18 19a2 2 0 1 0 0-.01"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10"/></symbol>
+    <symbol id="i-return" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 20s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <div class="announce">Free shipping on orders over <b>$50</b> · Sidereal Vault vinyl is back in stock</div>
+
+  <header class="header" id="header">
+    <div class="wrap header-row">
+      <a class="brand" href="#top" aria-label="Sore Heart Soar store — top">
+        <img src="assets/logo.png" alt="" width="38" height="38">
+        <div><b>Sore Heart Soar</b><small>Official site · Store</small></div>
+      </a>
+      <nav class="header-nav" aria-label="Store">
+        <a href="#shop">Shop</a>
+        <a href="#listen">Listen</a>
+        <a href="#help">Help</a>
+        <a href="index.html">Home</a>
+      </nav>
+      <div class="search">
+        <svg class="i"><use href="#i-search"/></svg>
+        <label class="sr-only" for="q">Search products</label>
+        <input type="search" id="q" placeholder="Search merch" autocomplete="off">
+        <kbd>/</kbd>
+      </div>
+      <button class="icon-btn search-toggle" id="searchToggle" type="button" aria-label="Search"><svg class="i"><use href="#i-search"/></svg></button>
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch to light theme"><svg class="i"><use href="#i-sun"/></svg></button>
+      <button class="icon-btn cart-btn" id="cartBtn" type="button" aria-label="Open cart, 0 items">
+        <svg class="i"><use href="#i-bag"/></svg><span class="lbl">Cart</span><span class="badge is-zero" id="badge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">New release · Limited pressing</span>
+          <h1>Sidereal <span>Vault</span></h1>
+          <p>The winged-heart record on 180g black wax, with full cover art, a Parental Advisory label and a digital download. Ships in a protective sleeve.</p>
+          <div class="specs"><span>12" LP</span><span>180g vinyl</span><span>Digital download</span></div>
+          <div class="price-row"><span class="now">$34.99</span><span class="was">$44.99</span><span class="save">Save 22%</span></div>
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="button" data-add="1"><svg class="i"><use href="#i-bag"/></svg>Add to cart</button>
+            <button class="btn btn-ghost" type="button" data-open="1">Details</button>
+            <button class="btn btn-ghost" type="button" id="heroListen"><svg class="i"><use href="#i-play"/></svg>Preview</button>
+          </div>
+        </div>
+        <div class="record" id="record">
+          <div class="disc" aria-hidden="true"></div>
+          <img src="assets/vinyl-cover.jpg" alt="Sidereal Vault vinyl cover" width="520" height="520" data-open="1">
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap perks">
+      <div class="perk"><span class="ic"><svg class="i"><use href="#i-truck"/></svg></span><div><strong>Free shipping</strong><span>On orders $50+</span></div></div>
+      <div class="perk"><span class="ic"><svg class="i"><use href="#i-box"/></svg></span><div><strong>Hand-packed</strong><span>From the studio</span></div></div>
+      <div class="perk"><span class="ic"><svg class="i"><use href="#i-return"/></svg></span><div><strong>30-day returns</strong><span>Unworn apparel</span></div></div>
+      <div class="perk"><span class="ic"><svg class="i"><use href="#i-heart"/></svg></span><div><strong>Artist direct</strong><span>Every sale supports SHS</span></div></div>
+    </div>
+
+    <section class="block" id="shop">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">The collection</span>
+            <h2>Shop all</h2>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+          <label class="sr-only" for="sort">Sort</label>
+          <select class="sort" id="sort">
+            <option value="featured">Featured</option>
+            <option value="low">Price: low to high</option>
+            <option value="high">Price: high to low</option>
+            <option value="new">Newest</option>
+          </select>
+        </div>
+        <p class="result-note" id="resultNote" aria-live="polite"></p>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <section class="block" id="listen" style="padding-top:0">
+      <div class="wrap">
+        <div class="listen" id="listenBox">
+          <div class="listen-art"><img id="npArt" src="assets/vinyl-cover.jpg" alt="Sidereal Vault cover art" width="340" height="340"></div>
+          <div>
+            <div class="np">
+              <small id="npState">Listen while you shop</small>
+              <div class="np-title" id="npTitle">Desperation</div>
+              <div class="np-artist">Sore Heart Soar</div>
+            </div>
+            <div class="controls">
+              <button class="ctrl" id="shuffleBtn" type="button" aria-label="Shuffle" aria-pressed="false"><svg class="i"><use href="#i-shuffle"/></svg></button>
+              <button class="ctrl" id="prevBtn" type="button" aria-label="Previous track"><svg class="i"><use href="#i-prev"/></svg></button>
+              <button class="ctrl ctrl-play" id="playBtn" type="button" aria-label="Play"><svg class="i"><use href="#i-play"/></svg></button>
+              <button class="ctrl" id="nextBtn" type="button" aria-label="Next track"><svg class="i"><use href="#i-next"/></svg></button>
+              <button class="ctrl" id="repeatBtn" type="button" aria-label="Repeat" aria-pressed="false"><svg class="i"><use href="#i-repeat"/></svg></button>
+              <label class="vol"><svg class="i"><use href="#i-vol"/></svg><span class="sr-only">Volume</span><input type="range" id="vol" min="0" max="1" step="0.01" value="0.85"></label>
+            </div>
+            <div class="seek-row"><span id="cur">0:00</span><input type="range" id="seek" min="0" max="1000" value="0" aria-label="Seek"><span id="dur">0:00</span></div>
+            <ol class="tracks" id="tracks"></ol>
+          </div>
+        </div>
+        <audio id="audio" preload="metadata"></audio>
+      </div>
+    </section>
+
+    <section class="block" id="help" style="padding-top:0">
+      <div class="wrap faq">
+        <div>
+          <span class="eyebrow">Help</span>
+          <div class="section-head" style="margin:0"><h2>Good to<br>know</h2></div>
+          <p class="lead">Questions about sizing, shipping or an order? Email <a href="mailto:merch@soreheartsoar.com">merch@soreheartsoar.com</a>.</p>
+        </div>
+        <div>
+          <details open><summary>How much is shipping?</summary><p>Shipping is free on orders of $50 or more. Below that it's a flat $5.99. Your cart shows how close you are to free shipping.</p></details>
+          <details><summary>How are orders packed?</summary><p>Every order is hand-packed at the studio. Vinyl ships in a protective sleeve and a rigid mailer.</p></details>
+          <details><summary>What's the return policy?</summary><p>Unworn apparel can be returned within 30 days. Opened vinyl and jewelry are final sale unless they arrive damaged.</p></details>
+          <details><summary>Can I check out yet?</summary><p>Not yet. The store is still being built, so checkout is a demo and no payment is taken. Your cart is saved in this browser, so it'll be waiting when payments go live.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-word" aria-hidden="true">Sore Heart<br>Soar</div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="#shop">Shop</a><a href="#listen">Listen</a><a href="#help">Help</a>
+          <a href="index.html">Home</a>
+          <a href="mailto:merch@soreheartsoar.com">Contact</a>
+          <button type="button" id="footerTheme">Toggle theme</button>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Sore Heart Soar · Official artist merchandise</span>
+        <span>Checkout is a placeholder while the store is under construction.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="ss-brand" role="contentinfo" aria-label="Scanline Softworks">
+    <div class="ss-brand-inner">
+      <img class="ss-brand-banner" src="assets/scanline-banner.png" alt="Scanline Softworks — Private Software Development" width="1024" height="1024" decoding="async" loading="lazy" />
+      <div class="ss-brand-word">
+        <span class="ss-scan">SCANLINE</span>
+        <span class="ss-soft">SOFTWORKS</span>
+      </div>
+      <span class="ss-rule" aria-hidden="true"></span>
+      <p class="ss-tag">Private Software Development</p>
+      <div class="ss-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <!-- Mini player -->
+  <div class="mini" id="mini" aria-label="Now playing">
+    <img id="miniArt" src="assets/vinyl-cover.jpg" alt="">
+    <div class="mt"><strong id="miniTitle">Desperation</strong><small>Sore Heart Soar</small></div>
+    <button class="ctrl" id="miniNext" type="button" aria-label="Next track"><svg class="i"><use href="#i-next"/></svg></button>
+    <button class="ctrl ctrl-play" id="miniPlay" type="button" aria-label="Play"><svg class="i"><use href="#i-play"/></svg></button>
+    <div class="bar"><i id="miniBar"></i></div>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+
+  <!-- Cart -->
+  <aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
+    <div class="drawer-head">
+      <h2>Your cart</h2>
+      <button class="icon-btn" type="button" id="cartClose" aria-label="Close cart"><svg class="i"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="ship" id="ship"></div>
+    <div class="lines" id="lines"></div>
+    <div class="totals" id="totals">
+      <div class="row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+      <div class="row"><span>Shipping</span><span id="shipping">$0.00</span></div>
+      <div class="row total"><span>Total</span><span id="total">$0.00</span></div>
+      <button class="btn btn-primary btn-block" type="button" id="checkoutBtn" style="margin-top:10px">Checkout <svg class="i"><use href="#i-right"/></svg></button>
+      <p class="note">Demo checkout. Real payments are coming soon.</p>
+    </div>
+  </aside>
+
+  <!-- Product modal -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" aria-hidden="true">
+    <div class="modal-box">
+      <button class="icon-btn modal-close" type="button" id="modalClose" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button>
+      <div class="modal-img"><img id="mImg" src="" alt=""></div>
+      <div class="modal-body">
+        <div class="modal-cat" id="mCat"></div>
+        <h2 class="modal-title" id="mTitle"></h2>
+        <div class="modal-price" id="mPrice"></div>
+        <p class="modal-desc" id="mDesc"></p>
+        <div id="mOpts">
+          <div class="opt-label" id="mOptLabel">Size</div>
+          <div class="sizes" id="mSizes" role="group"></div>
+        </div>
+        <div class="buy-row">
+          <div class="stepper"><button type="button" id="mMinus" aria-label="Decrease quantity">−</button><span id="mQty">1</span><button type="button" id="mPlus" aria-label="Increase quantity">+</button></div>
+          <button class="btn btn-primary" type="button" id="mAdd"><svg class="i"><use href="#i-bag"/></svg>Add to cart</button>
+        </div>
+        <div class="modal-meta">
+          <span><svg class="i"><use href="#i-check"/></svg>Free shipping on orders $50+</span>
+          <span><svg class="i"><use href="#i-check"/></svg>Hand-packed and shipped from the studio</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="assets/js/tracks.js"></script>
+  <script>
+    const THEME_KEY = 'shs-theme';
+    const CART_KEY = 'shs-store-cart';
+    const FREE_SHIP_MIN = 50;
+    const SHIP_FLAT = 5.99;
+
+    const products = [
+      {
+        id: 0,
+        name: "Black Embroidered Beanie",
+        category: "Accessories",
+        price: 19.99,
+        originalPrice: 24.99,
+        image: "assets/beanie-black.jpg",
+        rating: 4.8,
+        reviews: 94,
+        description: "Black ribbed knit beanie with embroidered winged-heart design — golden hands cupping a crimson heart with drip details. One size fits all.",
+        tag: null,
+        sizes: ["One Size"],
+        section: "accessories"
+      },
+      {
+        id: 1,
+        name: "Sidereal Vault Vinyl LP",
+        category: "Music",
+        price: 34.99,
+        originalPrice: 44.99,
+        image: "assets/vinyl-cover.jpg",
+        rating: 5.0,
+        reviews: 64,
+        description: "12-inch limited edition vinyl. 180g black wax. Parental Advisory sticker. Full winged-heart cover art. Includes digital download. Track: Desperation.",
+        tag: "hot",
+        sizes: ["12\" LP"],
+        section: "trending"
+      },
+      {
+        id: 2,
+        name: "Desperation Zip Hoodie",
+        category: "Apparel",
+        price: 59.99,
+        originalPrice: 74.99,
+        image: "assets/hoodie-zip-black.jpg",
+        rating: 4.9,
+        reviews: 87,
+        description: "Black zip-up hoodie with winged-heart graphic on front AND back. Golden hands, crimson heart, angel wings. Premium YKK zipper.",
+        tag: "hot",
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        section: "trending"
+      },
+      {
+        id: 3,
+        name: "White Logo Hoodie",
+        category: "Apparel",
+        price: 54.99,
+        originalPrice: 64.99,
+        image: "assets/hoodie-white-logo.jpg",
+        rating: 4.9,
+        reviews: 72,
+        description: "White pullover hoodie with full cosmic winged-heart graphic and SORE HEART SOAR logo print. Kangaroo pocket, relaxed fit.",
+        tag: "new",
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        section: "new"
+      },
+      {
+        id: 4,
+        name: "Black Pullover Hoodie",
+        category: "Apparel",
+        price: 49.99,
+        originalPrice: 59.99,
+        image: "assets/hoodie-black.jpg",
+        rating: 4.8,
+        reviews: 103,
+        description: "Black pullover hoodie with fiery winged-heart chest graphic. Glowing blue core, phoenix-style wings in orange and purple.",
+        tag: null,
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        section: "apparel"
+      },
+      {
+        id: 5,
+        name: "Red Pullover Hoodie",
+        category: "Apparel",
+        price: 49.99,
+        originalPrice: 59.99,
+        image: "assets/hoodie-red.jpg",
+        rating: 4.9,
+        reviews: 118,
+        description: "Bold red pullover hoodie with the signature winged-heart design. Electric blue core, fiery wings. Stand out in the crowd.",
+        tag: "hot",
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        section: "trending"
+      },
+      {
+        id: 6,
+        name: "White Pullover Hoodie",
+        category: "Apparel",
+        price: 49.99,
+        originalPrice: 59.99,
+        image: "assets/hoodie-white.jpg",
+        rating: 4.7,
+        reviews: 61,
+        description: "Clean white pullover with cosmic winged-heart graphic. Orange-yellow flames transitioning to purple-blue wing tips.",
+        tag: "new",
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        section: "new"
+      },
+      {
+        id: 7,
+        name: "Beanie 3-Color Pack",
+        category: "Accessories",
+        price: 44.99,
+        originalPrice: 54.99,
+        image: "assets/beanie-trio.jpg",
+        rating: 4.8,
+        reviews: 47,
+        description: "Set of 3 beanies — white, red, and black — each with the winged-heart cuff graphic. Lightning energy details. Save vs buying solo.",
+        tag: "sale",
+        sizes: ["White", "Red", "Black"],
+        section: "accessories"
+      },
+      {
+        id: 8,
+        name: "Winged Heart Pendant",
+        category: "Limited Edition",
+        price: 89.99,
+        originalPrice: 109.99,
+        image: "assets/pendant-necklace.jpg",
+        rating: 5.0,
+        reviews: 23,
+        description: "Gold necklace with anatomical heart pendant, sapphire center stone, and ornate feathered wings. Rose gold and blue gemstone details.",
+        tag: "limited",
+        sizes: ["18\"", "20\"", "24\" Chain"],
+        section: "limited"
+      },
+      {
+        id: 9,
+        name: "Sore Heart Soar Ring",
+        category: "Limited Edition",
+        price: 129.99,
+        originalPrice: 159.99,
+        image: "assets/ring-gold.jpg",
+        rating: 5.0,
+        reviews: 18,
+        description: "Statement signet ring — anatomical heart with bleeding tip, spread wings, and brilliant blue sapphire centerpiece. Gold band.",
+        tag: "limited",
+        sizes: ["6", "7", "8", "9", "10", "11"],
+        section: "limited"
+      },
+      {
+        id: 10,
+        name: "Brand Art Poster",
+        category: "Music",
+        price: 24.99,
+        originalPrice: 29.99,
+        image: "assets/hero-brand.jpg",
+        rating: 4.9,
+        reviews: 56,
+        description: "Official Sore Heart Soar winged-heart art poster. Cosmic background, lightning wings, reflective water. 18×24 matte print.",
+        tag: "new",
+        sizes: ["18×24\"", "24×36\""],
+        section: "music"
+      }
+    ];
+
+    const productById = Object.fromEntries(products.map((p) => [p.id, p]));
+    const FEATURED_ORDER = [1, 2, 5, 8, 3, 0, 9, 10, 4, 6, 7];
+    const NEW_ORDER = [3, 6, 7, 10, 1, 2, 5, 8, 9, 0, 4];
+    const TAG_LABELS = { sale: 'Sale', new: 'New', limited: 'Limited', hot: 'Best seller' };
+    const FILTERS = [
+      { key: 'all', label: 'All', test: () => true },
+      { key: 'apparel', label: 'Apparel', test: (p) => p.category === 'Apparel' },
+      { key: 'music', label: 'Music & art', test: (p) => p.category === 'Music' },
+      { key: 'accessories', label: 'Accessories', test: (p) => p.category === 'Accessories' },
+      { key: 'limited', label: 'Limited', test: (p) => p.category === 'Limited Edition' || p.tag === 'limited' },
+      { key: 'new', label: 'New', test: (p) => p.tag === 'new' }
+    ];
+
+    const $ = (id) => document.getElementById(id);
+    const money = (n) => '$' + n.toFixed(2);
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const ls = {
+      get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch { return d; } },
+      set(k, v) { try { localStorage.setItem(k, v); } catch { /* storage off */ } }
+    };
+
+    /* ── Theme ── */
+    function applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      const dark = t === 'dark';
+      $('themeBtn').querySelector('use').setAttribute('href', dark ? '#i-sun' : '#i-moon');
+      $('themeBtn').setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+      $('metaThemeColor').setAttribute('content', dark ? '#07070a' : '#f5f2ec');
+    }
+    function toggleTheme() {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      ls.set(THEME_KEY, next); applyTheme(next);
+    }
+
+    /* ── Catalog ── */
+    let filter = 'all', sortBy = 'featured', query = '';
+    function renderChips() {
+      $('chips').innerHTML = FILTERS.map((f) => {
+        const n = products.filter(f.test).length;
+        return `<button class="chip" type="button" data-filter="${f.key}" aria-pressed="${f.key === filter}">${f.label}<em>${n}</em></button>`;
+      }).join('');
+    }
+    function card(p) {
+      const tag = p.tag ? `<span class="tag ${esc(p.tag)}">${esc(TAG_LABELS[p.tag] || p.tag)}</span>` : '';
+      const was = p.originalPrice > p.price ? `<s>${money(p.originalPrice)}</s>` : '';
+      return `
+        <article class="card" data-open="${p.id}" tabindex="0" aria-label="${esc(p.name)}, ${money(p.price)}">
+          <div class="card-img">
+            ${tag}
+            <img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" width="400" height="400">
+            <button class="quick" type="button" data-add="${p.id}" aria-label="Add ${esc(p.name)} to cart"><svg class="i"><use href="#i-plus"/></svg><span>Quick add</span></button>
+          </div>
+          <div class="card-body">
+            <div><div class="card-name">${esc(p.name)}</div><div class="card-cat">${esc(p.category)}</div></div>
+            <div class="card-price"><b>${money(p.price)}</b>${was}</div>
+          </div>
+        </article>`;
+    }
+    function renderGrid() {
+      const f = FILTERS.find((x) => x.key === filter) || FILTERS[0];
+      const q = query.toLowerCase();
+      let list = products.filter((p) => f.test(p) && (!q || (p.name + ' ' + p.category + ' ' + p.description).toLowerCase().includes(q)));
+      if (sortBy === 'low') list.sort((a, b) => a.price - b.price);
+      else if (sortBy === 'high') list.sort((a, b) => b.price - a.price);
+      else { const order = sortBy === 'new' ? NEW_ORDER : FEATURED_ORDER; list.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id)); }
+      $('grid').innerHTML = list.length ? list.map(card).join('') : `<div class="empty">Nothing matches “${esc(query)}”.</div>`;
+      $('resultNote').innerHTML = q ? `${list.length} result${list.length === 1 ? '' : 's'} for “${esc(query)}”<button type="button" id="clearSearch">Clear</button>` : '';
+    }
+
+    /* ── Cart ── */
+    function loadCart() {
+      try { const v = JSON.parse(ls.get(CART_KEY, '[]')); return Array.isArray(v) ? v.filter((i) => productById[i.id]) : []; } catch { return []; }
+    }
+    let cart = loadCart();
+    const saveCart = () => ls.set(CART_KEY, JSON.stringify(cart));
+    const subtotal = () => cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+    function addToCart(id, size, qty = 1, silent) {
+      const p = productById[id]; if (!p) return;
+      size = size || p.sizes[0];
+      const line = cart.find((i) => i.id === id && i.size === size);
+      if (line) line.qty += qty; else cart.push({ id, name: p.name, price: p.price, image: p.image, size, qty });
+      saveCart(); renderCart();
+      const b = $('badge'); b.classList.add('pop'); setTimeout(() => b.classList.remove('pop'), 220);
+      if (!silent) toast(`Added ${p.name}${p.sizes.length > 1 ? ' (' + size + ')' : ''}`, 'View cart', openCart);
+    }
+    function setQty(index, delta) {
+      const line = cart[index]; if (!line) return;
+      line.qty += delta;
+      if (line.qty <= 0) return removeLine(index);
+      saveCart(); renderCart();
+    }
+    function removeLine(index) {
+      const [removed] = cart.splice(index, 1);
+      saveCart(); renderCart();
+      toast(`Removed ${removed.name}`, 'Undo', () => { cart.splice(index, 0, removed); saveCart(); renderCart(); });
+    }
+    function renderCart() {
+      const count = cart.reduce((s, i) => s + i.qty, 0);
+      const badge = $('badge');
+      badge.textContent = count; badge.classList.toggle('is-zero', !count);
+      $('cartBtn').setAttribute('aria-label', `Open cart, ${count} item${count === 1 ? '' : 's'}`);
+
+      const sub = subtotal();
+      const left = FREE_SHIP_MIN - sub;
+      const ship = $('ship');
+      ship.classList.toggle('done', left <= 0);
+      ship.innerHTML = (left > 0 ? `You're <b>${money(left)}</b> away from free shipping.` : `<b>You've got free shipping.</b>`) +
+        `<div class="track-bar"><i style="width:${Math.min(100, sub / FREE_SHIP_MIN * 100)}%"></i></div>`;
+      ship.style.display = cart.length ? '' : 'none';
+
+      $('lines').innerHTML = cart.length ? cart.map((i, idx) => `
+        <div class="line">
+          <img src="${esc(i.image)}" alt="" width="76" height="76">
+          <div>
+            <div class="line-name">${esc(i.name)}</div>
+            <div class="line-var">${esc(i.size)}</div>
+            <div class="line-bottom">
+              <div class="stepper"><button type="button" data-qty="${idx}" data-d="-1" aria-label="Decrease quantity">−</button><span>${i.qty}</span><button type="button" data-qty="${idx}" data-d="1" aria-label="Increase quantity">+</button></div>
+            </div>
+          </div>
+          <div><div class="line-price">${money(i.price * i.qty)}</div><button class="line-rm" type="button" data-rm="${idx}">Remove</button></div>
+        </div>`).join('') : `<div class="cart-empty"><svg><use href="#i-bag"/></svg><strong style="color:var(--text)">Your cart is empty</strong><span>Find something you like and it'll show up here.</span><button class="btn btn-ghost" type="button" data-close-cart>Keep shopping</button></div>`;
+
+      const shipping = sub >= FREE_SHIP_MIN || !cart.length ? 0 : SHIP_FLAT;
+      $('totals').style.display = cart.length ? '' : 'none';
+      $('subtotal').textContent = money(sub);
+      $('shipping').textContent = shipping ? money(shipping) : 'Free';
+      $('total').textContent = money(sub + shipping);
+    }
+
+    /* ── Overlays ── */
+    let lastFocus = null;
+    function lock(on) { document.body.classList.toggle('locked', on); $('scrim').classList.toggle('open', on); }
+    function openCart() {
+      closeModal(true);
+      lastFocus = document.activeElement;
+      $('drawer').classList.add('open'); $('drawer').setAttribute('aria-hidden', 'false'); lock(true);
+      setTimeout(() => $('cartClose').focus(), 50);
+    }
+    function closeCart() {
+      if (!$('drawer').classList.contains('open')) return;
+      $('drawer').classList.remove('open'); $('drawer').setAttribute('aria-hidden', 'true'); lock(false);
+      if (lastFocus) lastFocus.focus();
+    }
+
+    let modalId = null, modalSize = null, modalQty = 1;
+    function openModal(id) {
+      const p = productById[id]; if (!p) return;
+      modalId = id; modalSize = p.sizes[0]; modalQty = 1;
+      lastFocus = document.activeElement;
+      $('mImg').src = p.image; $('mImg').alt = p.name;
+      $('mCat').textContent = p.category;
+      $('mTitle').textContent = p.name;
+      const off = p.originalPrice > p.price ? Math.round((1 - p.price / p.originalPrice) * 100) : 0;
+      $('mPrice').innerHTML = `<b>${money(p.price)}</b>` + (off ? `<span class="was">${money(p.originalPrice)}</span><span class="save">Save ${off}%</span>` : '');
+      $('mDesc').textContent = p.description;
+      $('mOptLabel').textContent = p.category === 'Music' ? 'Format' : 'Size';
+      $('mOpts').style.display = p.sizes.length > 1 ? '' : 'none';
+      $('mSizes').innerHTML = p.sizes.map((s) => `<button class="size" type="button" data-size="${esc(s)}" aria-pressed="${s === modalSize}">${esc(s)}</button>`).join('');
+      $('mQty').textContent = '1';
+      $('modal').classList.add('open'); $('modal').setAttribute('aria-hidden', 'false'); lock(true);
+      history.replaceState(null, '', '#product-' + id);
+      setTimeout(() => $('modalClose').focus(), 50);
+    }
+    function closeModal(keepScrim) {
+      if (!$('modal').classList.contains('open')) return;
+      $('modal').classList.remove('open'); $('modal').setAttribute('aria-hidden', 'true');
+      if (!keepScrim) lock(false);
+      history.replaceState(null, '', location.pathname + location.search);
+      if (!keepScrim && lastFocus) lastFocus.focus();
+    }
+
+    function toast(text, action, fn) {
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.innerHTML = `<span>${esc(text)}</span>` + (action ? `<button type="button">${esc(action)}</button>` : '');
+      if (action) el.querySelector('button').addEventListener('click', () => { fn(); el.remove(); });
+      $('toasts').appendChild(el);
+      while ($('toasts').children.length > 3) $('toasts').firstChild.remove();
+      setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 300); }, 3600);
+    }
+
+    /* ── Player ── */
+    const TRACKS = window.SHS_TRACKS.filter((t) => t.src);
+    const audio = $('audio');
+    let cur = 0, dragging = false, shuffle = false, repeat = false;
+    const fmt = (s) => { if (!isFinite(s)) return '0:00'; s = Math.floor(s); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+    const fill = (el) => el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
+
+    function renderTracks() {
+      $('tracks').innerHTML = TRACKS.map((t, i) => `
+        <li class="tr" data-i="${i}" tabindex="0" role="button">
+          <span class="n"><span class="num">${String(i + 1).padStart(2, '0')}</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></span>
+          <span class="t">${esc(t.title)}</span><span class="d" data-dur="${i}">—</span>
+        </li>`).join('');
+      TRACKS.forEach((t, i) => {
+        const a = new Audio(); a.preload = 'metadata'; a.src = t.src;
+        a.addEventListener('loadedmetadata', () => { const el = document.querySelector(`[data-dur="${i}"]`); if (el) el.textContent = fmt(a.duration); });
+      });
+    }
+    function loadTrack(i, play) {
+      cur = (i + TRACKS.length) % TRACKS.length;
+      audio.src = TRACKS[cur].src;
+      $('npTitle').textContent = TRACKS[cur].title; $('miniTitle').textContent = TRACKS[cur].title;
+      $('npArt').src = TRACKS[cur].art; $('miniArt').src = TRACKS[cur].art;
+      document.querySelectorAll('.tr').forEach((li) => li.classList.toggle('active', +li.dataset.i === cur));
+      $('seek').value = 0; fill($('seek')); $('cur').textContent = '0:00';
+      if (play) audio.play().catch(() => {});
+    }
+    function nextIndex(d) {
+      if (shuffle && TRACKS.length > 1) { let n; do { n = Math.floor(Math.random() * TRACKS.length); } while (n === cur); return n; }
+      return cur + d;
+    }
+    function togglePlay() { if (!audio.src) loadTrack(cur); audio.paused ? audio.play().catch(() => {}) : audio.pause(); }
+    function playingUi(on) {
+      $('listenBox').classList.toggle('playing', on);
+      $('record').classList.toggle('spinning', on); $('record').classList.toggle('out', on);
+      $('npState').textContent = on ? 'Now playing' : (audio.currentTime > 0 ? 'Paused' : 'Listen while you shop');
+      ['playBtn', 'miniPlay'].forEach((id) => { $(id).querySelector('use').setAttribute('href', on ? '#i-pause' : '#i-play'); $(id).setAttribute('aria-label', on ? 'Pause' : 'Play'); });
+      $('heroListen').querySelector('use').setAttribute('href', on ? '#i-pause' : '#i-play');
+      if (on) $('mini').classList.add('show');
+    }
+
+    /* ── Events ── */
+    function setupEvents() {
+      $('themeBtn').addEventListener('click', toggleTheme);
+      $('footerTheme').addEventListener('click', toggleTheme);
+      $('cartBtn').addEventListener('click', openCart);
+      $('cartClose').addEventListener('click', closeCart);
+      $('modalClose').addEventListener('click', () => closeModal());
+      $('scrim').addEventListener('click', () => { closeModal(); closeCart(); });
+      $('modal').addEventListener('click', (e) => { if (e.target === $('modal')) closeModal(); });
+      $('checkoutBtn').addEventListener('click', () => {
+        const sub = subtotal(); const ship = sub >= FREE_SHIP_MIN ? 0 : SHIP_FLAT;
+        toast(`Demo only: checkout is coming soon. Your total would be ${money(sub + ship)}.`);
+      });
+
+      // Delegated clicks: open product, quick add, cart lines, filters
+      document.addEventListener('click', (e) => {
+        const add = e.target.closest('[data-add]');
+        if (add) { e.stopPropagation(); return addToCart(+add.dataset.add); }
+        const open = e.target.closest('[data-open]');
+        if (open) return openModal(+open.dataset.open);
+        const q = e.target.closest('[data-qty]');
+        if (q) return setQty(+q.dataset.qty, +q.dataset.d);
+        const rm = e.target.closest('[data-rm]');
+        if (rm) return removeLine(+rm.dataset.rm);
+        if (e.target.closest('[data-close-cart]')) return closeCart();
+        const chip = e.target.closest('[data-filter]');
+        if (chip) { filter = chip.dataset.filter; renderChips(); renderGrid(); return; }
+        if (e.target.id === 'clearSearch') { query = ''; $('q').value = ''; renderGrid(); }
+      });
+      $('grid').addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.matches('.card')) openModal(+e.target.dataset.open); });
+
+      $('mSizes').addEventListener('click', (e) => {
+        const b = e.target.closest('.size'); if (!b) return;
+        modalSize = b.dataset.size;
+        $('mSizes').querySelectorAll('.size').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      });
+      $('mMinus').addEventListener('click', () => { modalQty = Math.max(1, modalQty - 1); $('mQty').textContent = modalQty; });
+      $('mPlus').addEventListener('click', () => { modalQty = Math.min(20, modalQty + 1); $('mQty').textContent = modalQty; });
+      $('mAdd').addEventListener('click', () => { const id = modalId; addToCart(id, modalSize, modalQty); closeModal(); });
+
+      $('sort').addEventListener('change', (e) => { sortBy = e.target.value; renderGrid(); });
+      let t;
+      $('q').addEventListener('input', (e) => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          query = e.target.value.trim();
+          if (query && filter !== 'all') { filter = 'all'; renderChips(); }
+          renderGrid();
+        }, 120);
+      });
+      $('q').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('shop').scrollIntoView({ behavior: 'smooth' }); });
+      $('searchToggle').addEventListener('click', () => { const h = $('header'); h.classList.toggle('searching'); if (h.classList.contains('searching')) $('q').focus(); });
+
+      document.addEventListener('keydown', (e) => {
+        const typing = e.target.closest('input, textarea, select');
+        if (e.key === 'Escape') { closeModal(); closeCart(); if (typing) e.target.blur(); }
+        if (e.key === '/' && !typing) { e.preventDefault(); $('header').classList.add('searching'); $('q').focus(); }
+        if (e.code === 'Space' && !typing && !e.target.closest('button, a, [role="button"], .card') && !$('modal').classList.contains('open')) { e.preventDefault(); togglePlay(); }
+      });
+
+      // Player
+      $('playBtn').addEventListener('click', togglePlay);
+      $('miniPlay').addEventListener('click', togglePlay);
+      $('heroListen').addEventListener('click', togglePlay);
+      $('prevBtn').addEventListener('click', () => (audio.currentTime > 3 ? (audio.currentTime = 0) : loadTrack(nextIndex(-1), !audio.paused)));
+      $('nextBtn').addEventListener('click', () => loadTrack(nextIndex(1), !audio.paused));
+      $('miniNext').addEventListener('click', () => loadTrack(nextIndex(1), true));
+      $('shuffleBtn').addEventListener('click', (e) => { shuffle = !shuffle; e.currentTarget.setAttribute('aria-pressed', String(shuffle)); });
+      $('repeatBtn').addEventListener('click', (e) => { repeat = !repeat; e.currentTarget.setAttribute('aria-pressed', String(repeat)); });
+      $('tracks').addEventListener('click', (e) => { const li = e.target.closest('.tr'); if (!li) return; +li.dataset.i === cur && audio.src ? togglePlay() : loadTrack(+li.dataset.i, true); });
+      $('tracks').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.target.click(); } });
+      audio.addEventListener('play', () => playingUi(true));
+      audio.addEventListener('pause', () => playingUi(false));
+      audio.addEventListener('ended', () => { if (repeat) { audio.currentTime = 0; audio.play(); } else loadTrack(nextIndex(1), true); });
+      audio.addEventListener('loadedmetadata', () => { $('dur').textContent = fmt(audio.duration); });
+      audio.addEventListener('timeupdate', () => {
+        if (!audio.duration) return;
+        const p = audio.currentTime / audio.duration;
+        if (!dragging) { $('seek').value = Math.round(p * 1000); fill($('seek')); }
+        $('cur').textContent = fmt(audio.currentTime);
+        $('miniBar').style.width = (p * 100) + '%';
+      });
+      $('seek').addEventListener('input', (e) => { dragging = true; fill(e.target); if (audio.duration) $('cur').textContent = fmt(e.target.value / 1000 * audio.duration); });
+      $('seek').addEventListener('change', (e) => { if (audio.duration) audio.currentTime = e.target.value / 1000 * audio.duration; dragging = false; });
+      const vol = $('vol');
+      vol.value = ls.get('shs-volume', '0.85'); audio.volume = +vol.value; fill(vol);
+      vol.addEventListener('input', () => { audio.volume = +vol.value; fill(vol); ls.set('shs-volume', vol.value); });
+    }
+
+    function init() {
+      applyTheme(document.documentElement.getAttribute('data-theme'));
+      renderChips(); renderGrid(); renderCart(); renderTracks(); loadTrack(Math.max(0, TRACKS.findIndex((t) => t.title === 'Desperation')));
+      setupEvents();
+      fill($('seek'));
+      const m = location.hash.match(/^#product-(\d+)$/);
+      if (m && productById[+m[1]]) openModal(+m[1]);
+    }
+    init();
+  </script>
+</body>
+</html>
