@@ -61,11 +61,11 @@ html[data-theme="light"] {
   margin-top: 1rem;
   padding: 0.85rem 0.75rem 0.75rem;
   text-align: center;
-  border: 1px solid rgba(255, 122, 26, 0.22);
+  border: 1px solid rgba(0, 240, 250, 0.22);
   border-radius: 3px;
   background:
-radial-gradient(ellipse 70% 80% at 50% 35%, rgba(255, 122, 26, 0.07), transparent 65%),
-radial-gradient(ellipse 50% 60% at 50% 80%, rgba(160, 160, 160, 0.04), transparent 60%),
+radial-gradient(ellipse 70% 80% at 50% 35%, rgba(0, 240, 250, 0.07), transparent 65%),
+radial-gradient(ellipse 50% 60% at 50% 80%, rgba(60, 240, 12, 0.04), transparent 60%),
 rgba(6, 6, 6, 0.55);
   position: relative;
   overflow: hidden;
@@ -90,7 +90,7 @@ rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 3px
   margin: 0 auto;
   border-radius: 50%;
   object-fit: cover;
-  filter: drop-shadow(0 0 18px rgba(255, 110, 20, 0.4));
+  filter: drop-shadow(0 0 18px rgba(0, 240, 250, 0.4));
   opacity: 1;
 }
 .ss-brand-word {
@@ -104,22 +104,22 @@ rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 3px
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.22em;
-  color: #FF7A1A;
-  text-shadow: 0 0 10px rgba(255, 122, 26, 0.45);
+  color: #00F0FA;
+  text-shadow: 0 0 10px rgba(0, 240, 250, 0.45);
 }
 .ss-soft {
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.28em;
-  color: #A3A3A3;
-  text-shadow: 0 0 10px rgba(160, 160, 160, 0.3);
+  color: #3CF00C;
+  text-shadow: 0 0 10px rgba(60, 240, 12, 0.3);
 }
 .ss-rule {
   display: block;
   width: min(180px, 42%);
   height: 1px;
   margin: 0.4rem auto 0.35rem;
-  background: linear-gradient(90deg, transparent, rgba(255,122,26,0.8), rgba(160,160,160,0.6), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,240,250,0.8), rgba(60,240,12,0.6), transparent);
 }
 .ss-tag {
   margin: 0;
@@ -139,9 +139,9 @@ rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 3px
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #A3A3A3;
+  background: #3CF00C;
   opacity: 0.6;
-  box-shadow: 0 0 4px rgba(160, 160, 160, 0.4);
+  box-shadow: 0 0 4px rgba(60, 240, 12, 0.4);
 }
 .ss-brand-word,
 .ss-rule,
